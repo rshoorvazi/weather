@@ -1,0 +1,15 @@
+.chart-container {
+    width: 60%; /* عرض نمودار را تنظیم می‌کند */
+    max-width: 70rem; /* حداکثر عرض به واحد rem */
+    max-height: 20rem;
+    margin: 0 auto 3.125rem auto; /* مرکز کردن در صفحه و تنظیم فاصله از بالا */
+    padding: 1.25rem; /* فاصله داخلی */
+    /* background: #f9f9f9; !* رنگ پس‌زمینه اختیاری *! */
+    border-radius: 0.625rem; /* گوشه‌های گرد */
+    box-shadow: 0px 0.25rem 0.625rem rgba(0, 0, 0, 0.1); /* سایه برای زیبایی */
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
