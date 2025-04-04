@@ -29,7 +29,7 @@
                     {{$current['temperature']}}
                     </span> &#8451;
                 </p>
-{{--                    <p>آفتابی</p>--}}
+                {{--                    <p>آفتابی</p>--}}
             </div>
         </li>
         <ul>
@@ -271,136 +271,14 @@
 <div class="chart-container">
     <canvas id="temperatureChart"></canvas>
 </div>
-
-
-
-{{--</ul>--}}
-<!-- jQuery از CDN گوگل -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@vite(['resources/js/app.js'])
-
 <script>
-    $(document).ready(function () {
-
-        // تعریف چارت
-        const ctx = document.getElementById('temperatureChart').getContext('2d');
-        const temperatureChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: {!! $forecast_hours !!},  // ساعت‌ها به طور داینامیک اضافه می‌شوند
-                datasets: [{
-                    label: 'دما (°C)',
-                    data: {!! $forecast_temperatures !!},  // دماها به طور داینامیک اضافه می‌شوند
-                    borderColor: 'orange',
-                    backgroundColor: 'rgba(255, 165, 0, 0.2)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: {display: true, text: 'زمان و وضعیت آب‌وهوا'}
-                    },
-                    y: {
-                        display: false
-                    }
-                }
-            }
-        });
-
-        // راه‌اندازی Select2
-        $('#js-example-basic-single').select2({
-            width: '16rem',
-            ajax: {
-                url: '/api/cities',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term, // مقدار جستجو شده
-                        page: params.page || 1 // شماره صفحه
-                    };
-                },
-                processResults: function (data, params) {
-                    params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more
-                        }
-                    };
-                },
-                cache: true
-            },
-            minimumInputLength: 1,
-            language: {
-                noResults: function () {
-                    return "هیچ نتیجه‌ای پیدا نشد";
-                },
-                inputTooShort: function (args) {
-                    return `لطفاً حداقل ${args.minimum} حرف وارد کنید`;
-                }
-            }
-        });
-
-        // زمانی که شهری انتخاب می‌شود
-        $('#js-example-basic-single').on('select2:select', function (e) {
-            let cityId = e.params.data.id;
-
-            axios.get(`/api/weather/${cityId}`)
-                .then(response => {
-                    let data = response.data;
-                    $('#humidity').html(data.current.humidity)
-                    $('#precipitation').html(data.current.precipitation)
-                    $('#wind-speed').html(data.current.wind_speed)
-                    $('#city-name').html(data.city_name)
-                    const weatherClass = data.current.weather_class[0]; // مثل card-sunny
-                    const iconClasses = data.current.weather_class[1];  // مثل ['sunny', 'sun-clouds']
-
-                    let $weatherCard = $('#weather-card');
-
-                    // مرحله اول: اجرای انیمیشن خروج
-                    $weatherCard.removeClass('fade-in').addClass('fade-out');
-                    setTimeout(() => {
-                        // تغییر کلاس‌های کارت
-                        $weatherCard
-                            .removeClass() // حذف همه کلاس‌ها
-                            .addClass('card') // کلاس پایه
-                            .addClass(weatherClass); // کلاس متناسب با وضعیت هوا
-
-                        // حذف آیکن‌های قبلی
-                        $weatherCard.empty();
-
-                        // افزودن آیکن‌های جدید
-                        iconClasses.forEach(icon => {
-                            $weatherCard.append(`<div class="${icon}"></div>`);
-                        });
-
-                        // اجرای انیمیشن ورود
-                        $weatherCard.removeClass('fade-out').addClass('fade-in');
-                    }, 400); // باید با زمان transition در CSS هماهنگ باشد
-
-                    // چارت مثل قبل
-                    const hours = data.forecast.hours;
-                    const temperatures = data.forecast.temperatures;
-                    temperatureChart.data.labels = hours;
-                    temperatureChart.data.datasets[0].data = temperatures;
-                    temperatureChart.update();
-                })
-                .catch(error => {
-                    console.error("خطا در دریافت اطلاعات آب و هوا", error);
-                });
-        });
-
-    });
+    window.forecastHours = {!! $forecast_hours !!};
+    window.forecastTemperatures = {!! $forecast_temperatures !!};
 </script>
-
+@vite(['resources/js/app.js'])
 </body>
 </html>
