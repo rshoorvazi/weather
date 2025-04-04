@@ -64,7 +64,7 @@ body {
     margin: 10px;
     background-color: #3c3b3d;
     overflow: hidden;
-    max-height: 300px;
+    max-height: 250px;
 }
 
 header {
@@ -74,7 +74,7 @@ header {
 header h1 {
     font-weight: 600;
     font-size: 2.4rem;
-    color: #fa0000;
+    color: #1b0606;
     text-align: center;
     text-transform: uppercase;
     /*letter-spacing: 0.1em;*/
@@ -992,7 +992,7 @@ header h1 {
     }
 }
 
-.sun-clouds {
+.clouds {
     /*-moz-animation: snow 5s ease-in-out infinite;*/
     /*-webkit-animation: snow 5s ease-in-out infinite;*/
     /*animation: snow 5s ease-in-out infinite;*/
@@ -1058,4 +1058,24 @@ ul li {
 }
 .select2-container--default .select2-results__option {
     font-size: 1rem; /* تغییر اندازه فونت گزینه‌ها */
+}
+
+small {
+    font-size: 50%; /* واحدها 20٪ کوچکتر از متن اصلی باشند */
+    vertical-align: center; /* کمی بالاتر نمایش داده شوند */
+    opacity: 0.8; /* رنگ کمی کمرنگ‌تر شود */
+    opacity: 0.8; /* رنگ کمی کمرنگ‌تر شود */
+}
+.card {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.card.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.card.fade-in {
+    opacity: 1;
+    transform: scale(1);
 }

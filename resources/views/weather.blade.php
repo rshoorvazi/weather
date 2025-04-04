@@ -1,41 +1,47 @@
-<!DOCTYPE html>
+@php
+    $forecast_hours = json_encode($forecast['hours']);
+    $forecast_temperatures = json_encode($forecast['temperatures'])
+@endphp
+    <!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>weather</title>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     @vite(['resources/css/app.css'])
 </head>
 <body>
 <header>
-    <h1>آب و هوای تهران</h1>
+    <h1>آب و هوای ایران</h1>
 </header>
-
 <div class="main">
     <div class="today">
         <li class="grid-item">
-            <div class="card card-sunny">
-                <div class="sunny"></div>
+            <div id="weather-card" class="card {{ $current['weather_class'][0] }}">
+                @foreach ($current['weather_class'][1] as $iconClass)
+                    <div class="{{ $iconClass }}"></div>
+                @endforeach
             </div>
             <div class="status">
                 <p>
                     <span>
-                    15
-                    </span> &#8451;</p>
-                <p>آفتابی</p>
+                    {{$current['temperature']}}
+                    </span> &#8451;
+                </p>
+{{--                    <p>آفتابی</p>--}}
             </div>
         </li>
         <ul>
-            <li>بارش : <span> 50 </span></li>
-            <li>وزش باد : <span> 50 </span></li>
-            <li>رطوبت : <span> 50 </span></li>
+            <li>بارش : <small>%</small><span id="precipitation">{{$current['precipitation']}} </span></li>
+            <li>وزش باد : <small>ثانیه/متر</small><span id="wind-speed">{{$current['wind_speed']}} </span></li>
+            <li>رطوبت : <small>%</small><span id="humidity">{{$current['humidity']}} </span></li>
         </ul>
     </div>
 
     <div class="day-info">
         <p>یک شنبه&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>1404/01/05</span></p>
-        <p>آب و هوای تهران</p>
+        <p>آب و هوای <span id="city-name">{{$city_name}}</span></p>
         <div>
             <svg version="1.1" id="clock" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                  x="0px" y="0px"
@@ -256,13 +262,9 @@
 
     </div>
     <div class="select-wrapper">
-        <select class="js-example-basic-single" >
+        <select id="js-example-basic-single">
             <option value="tehran">تهران</option>
-            <option value="isfahan">اصفهان</option>
-            <option value="shiraz">شیراز</option>
-            <option value="mashhad">مشهد</option>
-            <option value="tabriz">تبریز</option>
-            <option value="ahvaz">اهواز</option>
+
         </select>
     </div>
 </div>
@@ -270,62 +272,6 @@
     <canvas id="temperatureChart"></canvas>
 </div>
 
-{{--<ul class="grid-container">--}}
-{{--    <li class="grid-item">--}}
-{{--        <div class="card card-night">--}}
-{{--            <div class="night"></div>--}}
-{{--        </div>--}}
-{{--        <div class="status">--}}
-{{--            <p>71 &#8457;</p>--}}
-{{--            <p>Clear skies</p>--}}
-{{--        </div>--}}
-{{--    </li>--}}
-{{--    <li class="grid-item">--}}
-{{--        <div class="card card-rain">--}}
-{{--            <div class="rain"></div>--}}
-{{--        </div>--}}
-{{--        <div class="status">--}}
-{{--            <p>71 &#8457;</p>--}}
-{{--            <p>Showers</p>--}}
-{{--        </div>--}}
-{{--    </li>--}}
-{{--    <li class="grid-item">--}}
-{{--        <div class="card card-snow">--}}
-{{--            <div class="snow"></div>--}}
-{{--        </div>--}}
-{{--        <div class="status">--}}
-{{--            <p>71 &#8457;</p>--}}
-{{--            <p>Light flurry</p>--}}
-{{--        </div>--}}
-{{--    </li>--}}
-{{--    <li class="grid-item">--}}
-{{--        <div class="card card-storm">--}}
-{{--            <div class="storm"></div>--}}
-{{--        </div>--}}
-{{--        <div class="status">--}}
-{{--            <p>71 &#8457;</p>--}}
-{{--            <p>Thunderstorms</p>--}}
-{{--        </div>--}}
-{{--    </li>--}}
-{{--    <li class="grid-item">--}}
-{{--        <div class="card card-sunny">--}}
-{{--            <div class="sunny"></div>--}}
-{{--        </div>--}}
-{{--        <div class="status">--}}
-{{--            <p>71 &#8457;</p>--}}
-{{--            <p>Mostly sunny</p>--}}
-{{--        </div>--}}
-{{--    </li>--}}
-{{--    <li class="grid-item">--}}
-{{--        <div class="card card-sun-clouds">--}}
-{{--            <div class="sunny"></div>--}}
-{{--            <div class="sun-clouds"></div>--}}
-{{--        </div>--}}
-{{--        <div class="status">--}}
-{{--            <p>72 &#8457;</p>--}}
-{{--            <p>Partly Cloudy</p>--}}
-{{--        </div>--}}
-{{--    </li>--}}
 
 
 {{--</ul>--}}
@@ -334,15 +280,127 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@vite(['resources/js/app.js'])
 
 <script>
-    // In your Javascript (external .js resource or <script> tag)
-    $(document).ready(function() {
-        $('.js-example-basic-single').select2({
-            width: '16rem'
+    $(document).ready(function () {
+
+        // تعریف چارت
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        const temperatureChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {!! $forecast_hours !!},  // ساعت‌ها به طور داینامیک اضافه می‌شوند
+                datasets: [{
+                    label: 'دما (°C)',
+                    data: {!! $forecast_temperatures !!},  // دماها به طور داینامیک اضافه می‌شوند
+                    borderColor: 'orange',
+                    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {display: true, text: 'زمان و وضعیت آب‌وهوا'}
+                    },
+                    y: {
+                        display: false
+                    }
+                }
+            }
         });
+
+        // راه‌اندازی Select2
+        $('#js-example-basic-single').select2({
+            width: '16rem',
+            ajax: {
+                url: '/api/cities',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term, // مقدار جستجو شده
+                        page: params.page || 1 // شماره صفحه
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 3,
+            language: {
+                noResults: function () {
+                    return "هیچ نتیجه‌ای پیدا نشد";
+                },
+                inputTooShort: function (args) {
+                    return `لطفاً حداقل ${args.minimum} حرف وارد کنید`;
+                }
+            }
+        });
+
+        // زمانی که شهری انتخاب می‌شود
+        $('#js-example-basic-single').on('select2:select', function (e) {
+            let cityId = e.params.data.id;
+
+            axios.get(`/api/weather/${cityId}`)
+                .then(response => {
+                    let data = response.data;
+                    $('#humidity').html(data.current.humidity)
+                    $('#precipitation').html(data.current.precipitation)
+                    $('#wind-speed').html(data.current.wind_speed)
+                    $('#city-name').html(data.city_name)
+                    const weatherClass = data.current.weather_class[0]; // مثل card-sunny
+                    const iconClasses = data.current.weather_class[1];  // مثل ['sunny', 'sun-clouds']
+
+                    let $weatherCard = $('#weather-card');
+
+                    // مرحله اول: اجرای انیمیشن خروج
+                    $weatherCard.removeClass('fade-in').addClass('fade-out');
+                    setTimeout(() => {
+                        // تغییر کلاس‌های کارت
+                        $weatherCard
+                            .removeClass() // حذف همه کلاس‌ها
+                            .addClass('card') // کلاس پایه
+                            .addClass(weatherClass); // کلاس متناسب با وضعیت هوا
+
+                        // حذف آیکن‌های قبلی
+                        $weatherCard.empty();
+
+                        // افزودن آیکن‌های جدید
+                        iconClasses.forEach(icon => {
+                            $weatherCard.append(`<div class="${icon}"></div>`);
+                        });
+
+                        // اجرای انیمیشن ورود
+                        $weatherCard.removeClass('fade-out').addClass('fade-in');
+                    }, 400); // باید با زمان transition در CSS هماهنگ باشد
+
+                    // چارت مثل قبل
+                    const hours = data.forecast.hours;
+                    const temperatures = data.forecast.temperatures;
+                    temperatureChart.data.labels = hours;
+                    temperatureChart.data.datasets[0].data = temperatures;
+                    temperatureChart.update();
+                })
+                .catch(error => {
+                    console.error("خطا در دریافت اطلاعات آب و هوا", error);
+                });
+        });
+
     });
 </script>
-@vite(['resources/js/app.js'])
+
 </body>
 </html>

@@ -18,6 +18,12 @@ class CitySeeder extends Seeder
         if (File::exists($sqlPath)) {
             DB::unprepared(File::get($sqlPath));
             $this->command->info('Cities imported successfully.');
+
+            DB::table('cities')->update([
+                'city' => DB::raw("REPLACE(REPLACE(city, 'ي', 'ی'), 'ك', 'ک')")
+            ]);
+
+            $this->command->info('Cities normalized successfully.');
         } else {
             $this->command->error('SQL file not found: ' . $sqlPath);
         }
