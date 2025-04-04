@@ -28,12 +28,13 @@ use Illuminate\Contracts\View\View;
 
         $currentWeather = $this->weatherService->getCurrentWeather($lat, $lon);
         $forecast = $this->weatherService->getWeatherForecast($lat, $lon);
+        $date = $this->weatherService->getDate($lat, $lon);
 
         return [
             'current' => $currentWeather,
             'forecast' => $forecast,
             'city_name' => $city->city,
-            'date' => $city->city,
+            'date' => $date,
         ];
     }
 }

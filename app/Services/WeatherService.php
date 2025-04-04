@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Morilog\Jalali\Jalalian;
 
 class WeatherService
 {
@@ -97,6 +98,12 @@ class WeatherService
         }
 
         return ['card-default', ['default-icon']];
+    }
+
+    public function getDate(): string
+    {
+        $today = Jalalian::now();
+        return $today->format('%A') .  " " . $today->format('Y/m/d');
     }
 
 

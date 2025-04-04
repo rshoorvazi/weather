@@ -40,7 +40,7 @@
     </div>
 
     <div class="day-info">
-        <p>یک شنبه&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>1404/01/05</span></p>
+        <p>{{$date}}</p>
         <p>آب و هوای <span id="city-name">{{$city_name}}</span></p>
         <div>
             <svg version="1.1" id="clock" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -339,7 +339,7 @@
                 },
                 cache: true
             },
-            minimumInputLength: 3,
+            minimumInputLength: 1,
             language: {
                 noResults: function () {
                     return "هیچ نتیجه‌ای پیدا نشد";
